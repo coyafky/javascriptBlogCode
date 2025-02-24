@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Image Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .section {
+            flex: 1 1 calc(50% - 10px);
+            min-width: 300px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .image-container {
+            width: 100%;
+            height: 200px;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <div class="image-container" id="image1"></div>
+            <button onclick="fetchImageLoli(1)">Fetch Image 1</button>
+        </div>
+        <div class="section">
+            <div class="image-container" id="image2"></div>
+            <button onclick="fetchImageDog(2)">Fetch Image 2</button>
+        </div>
+        <div class="section">
+            <div class="image-container" id="image3"></div>
+            <button onclick="fetchImageCat(3)">Fetch Image 3</button>
+        </div>
+        <div class="section">
+            <div class="image-container" id="image4"></div>
+            <button onclick="fetchImagePicture(4)">Fetch Image 4</button>
+        </div>
+    </div>
+
+  
+    <script>
+        function fetchImageLoli(id) {
+            // 由于 CORS 问题，我们将使用一个占位图像 API
+            fetch(`https://picsum.photos/300/200?random=${id}`)
+                .then(response => response.url)
+                .then(imageUrl => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    const container = document.getElementById(`image${id}`);
+                    container.innerHTML = '';
+                    container.appendChild(imgElement);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function fetchImageDog(id) {
+            fetch(`https://dog.ceo/api/breeds/image/random`)
+                .then(response => response.json())
+                .then(data => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = data.message;
+                    const container = document.getElementById(`image${id}`);
+                    container.innerHTML = '';
+                    container.appendChild(imgElement);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function fetchImageCat(id) {
+            fetch(`https://api.thecatapi.com/v1/images/search`)
+                .then(response => response.json())
+                .then(data => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = data[0].url;
+                    const container = document.getElementById(`image${id}`);
+                    container.innerHTML = '';
+                    container.appendChild(imgElement);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function fetchImagePicture(id) {
+            fetch(`https://picsum.photos/300/200?random=${id}`)
+                .then(response => response.url)
+                .then(imageUrl => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    const container = document.getElementById(`image${id}`);
+                    container.innerHTML = '';
+                    container.appendChild(imgElement);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

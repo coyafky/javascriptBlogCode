@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复制文本到剪贴板</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 300px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #status {
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>复制文本到剪贴板</h2>
+        <input type="text" id="textToCopy" value="这是要复制的文本">
+        <button onclick="copyToClipboard()">复制</button>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        /**
+         * 将输入框中的文本复制到剪贴板
+         */
+        function copyToClipboard() {
+            // 获取输入框元素
+            var textToCopy = document.getElementById("textToCopy");
+            
+            // 选中输入框中的文本
+            textToCopy.select();
+            textToCopy.setSelectionRange(0, 99999); // 适用于移动设备
+
+            // 尝试复制文本到剪贴板
+            try {
+                var successful = document.execCommand("copy");
+                var msg = successful ? "文本已成功复制到剪贴板" : "复制失败";
+                updateStatus(msg);
+            } catch (err) {
+                updateStatus("复制时出错: " + err);
+            }
+
+            // 取消文本选择
+            window.getSelection().removeAllRanges();
+        }
+
+        /**
+         * 更新状态消息
+         * @param {string} message - 要显示的状态消息
+         */
+        function updateStatus(message) {
+            var status = document.getElementById("status");
+            status.textContent = message;
+            
+            // 3秒后清除状态消息
+            setTimeout(function() {
+                status.textContent = "";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

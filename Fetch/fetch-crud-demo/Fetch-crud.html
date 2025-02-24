@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async Fetch CRUD</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        input { margin: 5px 0; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>User Management (Async Fetch)</h1>
+    
+    <h2>Add User</h2>
+    <form id="addUserForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <button type="submit">Add User</button>
+    </form>
+
+    <h2>Users</h2>
+    <table id="usersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        // Create
+        async function createUser(name, email) {
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                if (!response.ok) throw new Error('Failed to create user');
+                const newUser = await response.json();
+                console.log('New user created:', newUser);
+                await fetchUsers();
+            } catch (error) {
+                console.error('Error creating user:', error);
+            }
+        }
+
+        // Read
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_URL}/users`);
+                if (!response.ok) throw new Error('Failed to fetch users');
+                const users = await response.json();
+                const tbody = document.querySelector('#usersTable tbody');
+                tbody.innerHTML = '';
+                users.forEach(user => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>
+                                <button onclick="editUser(${user.id})">Edit</button>
+                                <button onclick="deleteUser(${user.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        // Update
+        async function editUser(id) {
+            const name = prompt('Enter new name:');
+            const email = prompt('Enter new email:');
+            if (name && email) {
+                try {
+                    const response = await fetch(`${API_URL}/users/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email })
+                    });
+                    if (!response.ok) throw new Error('Failed to update user');
+                    const updatedUser = await response.json();
+                    console.log('User updated:', updatedUser);
+                    await fetchUsers();
+                } catch (error) {
+                    console.error('Error updating user:', error);
+                }
+            }
+        }
+
+        // Delete
+        async function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                try {
+                    const response = await fetch(`${API_URL}/users/${id}`, { method: 'DELETE' });
+                    if (!response.ok) throw new Error('Failed to delete user');
+                    console.log('User deleted');
+                    await fetchUsers();
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                }
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('addUserForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            await createUser(name, email);
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+        });
+
+        // Initial fetch
+        fetchUsers();
+    </script>
+</body>
+</html>
