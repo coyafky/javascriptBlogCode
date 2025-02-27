@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">事件委托 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <table id="demoTable" class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-300 p-2">列 1</th>
+                        <th class="border border-gray-300 p-2">列 2</th>
+                        <th class="border border-gray-300 p-2">列 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 表格行将由 JavaScript 动态生成 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="eventLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm">
+            <p>移动鼠标到表格单元格上来查看事件</p>
+        </div>
+    </div>
+
+    <script>
+        const table = document.getElementById('demoTable');
+        const tbody = table.querySelector('tbody');
+        const eventLog = document.getElementById('eventLog');
+
+        // 生成表格行
+        for (let i = 0; i < 5; i++) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < 3; j++) {
+                const cell = document.createElement('td');
+                cell.textContent = `单元格 ${i+1}-${j+1}`;
+                cell.className = 'border border-gray-300 p-2';
+                row.appendChild(cell);
+            }
+            tbody.appendChild(row);
+        }
+
+        // 事件委托
+        table.addEventListener('mouseover', function(event) {
+            if (event.target.tagName === 'TD') {
+                event.target.classList.add('bg-pink-200');
+                logEvent('mouseover', event.target);
+            }
+        });
+
+        table.addEventListener('mouseout', function(event) {
+            if (event.target.tagName === 'TD') {
+                event.target.classList.remove('bg-pink-200');
+                logEvent('mouseout', event.target);
+            }
+        });
+
+        function logEvent(eventType, target) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${eventType} on ${target.textContent}`;
+            logEntry.className = eventType === 'mouseover' ? 'text-blue-600' : 'text-red-600';
+            
+            eventLog.insertBefore(logEntry, eventLog.firstChild);
+            
+            if (eventLog.children.length > 10) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>

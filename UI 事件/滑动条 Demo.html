@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滑动条 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .slider {
+            user-select: none;
+        }
+        .thumb {
+            cursor: grab;
+            touch-action: none;
+        }
+        .thumb:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">滑动条 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <div id="slider" class="slider relative h-8 bg-gray-300 rounded-full">
+                <div id="thumb" class="thumb absolute top-0 left-0 w-8 h-8 bg-blue-500 rounded-full"></div>
+            </div>
+            <p id="value" class="mt-2 text-center font-semibold">值: 0</p>
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const thumb = document.getElementById('thumb');
+        const valueDisplay = document.getElementById('value');
+
+        let isDragging = false;
+
+        thumb.onmousedown = function(event) {
+            event.preventDefault(); // 防止文本被选中
+            isDragging = true;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+
+        function onMouseMove(event) {
+            if (isDragging) {
+                let newLeft = event.clientX - slider.getBoundingClientRect().left;
+                // 确保滑块不会超出滑动条的范围
+                newLeft = Math.max(0, Math.min(newLeft, slider.offsetWidth - thumb.offsetWidth));
+                thumb.style.left = newLeft + 'px';
+                updateValue(newLeft);
+            }
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        function updateValue(position) {
+            const maxValue = slider.offsetWidth - thumb.offsetWidth;
+            const percentage = (position / maxValue) * 100;
+            valueDisplay.textContent = `值: ${Math.round(percentage)}`;
+        }
+
+        // 防止默认的拖动行为
+        thumb.ondragstart = function() {
+            return false;
+        };
+    </script>
+</body>
+</html>

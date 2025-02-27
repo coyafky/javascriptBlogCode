@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标拖拽 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .draggable {
+            cursor: move;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">鼠标拖拽 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4 relative h-96">
+            <div id="ball" class="draggable w-16 h-16 bg-red-500 rounded-full absolute left-0 top-0 flex items-center justify-center text-white font-bold">
+                拖我
+            </div>
+        </div>
+        
+        <div id="eventLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm">
+            <p>拖拽红色圆球来查看事件</p>
+        </div>
+    </div>
+
+    <script>
+        const ball = document.getElementById('ball');
+        const eventLog = document.getElementById('eventLog');
+
+        function logEvent(eventType, x, y) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${eventType}: x=${x}, y=${y}`;
+            eventLog.insertBefore(logEntry, eventLog.firstChild);
+            
+            if (eventLog.children.length > 10) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+
+        ball.onmousedown = function(event) {
+            event.preventDefault(); // 防止文本被选中
+
+            let shiftX = event.clientX - ball.getBoundingClientRect().left;
+            let shiftY = event.clientY - ball.getBoundingClientRect().top;
+
+            ball.style.position = 'absolute';
+            ball.style.zIndex = 1000;
+            document.body.append(ball);
+
+            moveAt(event.pageX, event.pageY);
+
+            function moveAt(pageX, pageY) {
+                ball.style.left = pageX - shiftX + 'px';
+                ball.style.top = pageY - shiftY + 'px';
+            }
+
+            function onMouseMove(event) {
+                moveAt(event.pageX, event.pageY);
+                logEvent('mousemove', event.pageX, event.pageY);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+
+            ball.onmouseup = function() {
+                document.removeEventListener('mousemove', onMouseMove);
+                ball.onmouseup = null;
+                logEvent('mouseup', event.pageX, event.pageY);
+            };
+
+            logEvent('mousedown', event.pageX, event.pageY);
+        };
+
+        ball.ondragstart = function() {
+            return false;
+        };
+    </script>
+</body>
+</html>

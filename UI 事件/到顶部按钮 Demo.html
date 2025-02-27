@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>到顶部按钮 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .scroll-to-top {
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4">到顶部按钮 Demo</h1>
+        
+        <div id="content">
+            <!-- 这里将动态添加内容 -->
+        </div>
+    </div>
+
+    <button id="scrollToTopBtn" class="scroll-to-top fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-full shadow-md opacity-0 invisible">
+        ↑
+    </button>
+
+    <script>
+        const content = document.getElementById('content');
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // 添加足够的内容以使页面可滚动
+        function addContent() {
+            for (let i = 1; i <= 20; i++) {
+                const item = document.createElement('div');
+                item.className = 'bg-white p-4 rounded-lg shadow-md mb-4';
+                item.textContent = `内容项 ${i}`;
+                content.appendChild(item);
+            }
+        }
+
+        // 控制按钮的显示和隐藏
+        function toggleScrollToTopButton() {
+            if (window.pageYOffset > window.innerHeight) {
+                scrollToTopBtn.classList.remove('opacity-0', 'invisible');
+            } else {
+                scrollToTopBtn.classList.add('opacity-0', 'invisible');
+            }
+        }
+
+        // 滚动到顶部
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 添加事件监听器
+        window.addEventListener('scroll', toggleScrollToTopButton);
+        scrollToTopBtn.addEventListener('click', scrollToTop);
+
+        // 初始化内容
+        addContent();
+    </script>
+</body>
+</html>

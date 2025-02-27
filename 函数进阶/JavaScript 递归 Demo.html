@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 递归 Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .demo-section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #treeDemo {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript 递归 Demo</h1>
+
+        <div class="demo-section">
+            <h2>阶乘计算</h2>
+            <input type="number" id="factorialInput" min="0" value="5">
+            <button onclick="calculateFactorial()">计算阶乘</button>
+            <p id="factorialResult"></p>
+        </div>
+
+        <div class="demo-section">
+            <h2>斐波那契数列</h2>
+            <input type="number" id="fibonacciInput" min="0" value="10">
+            <button onclick="generateFibonacci()">生成斐波那契数列</button>
+            <p id="fibonacciResult"></p>
+        </div>
+
+        <div class="demo-section">
+            <h2>树形结构遍历</h2>
+            <button onclick="traverseTree()">遍历树结构</button>
+            <div id="treeDemo"></div>
+        </div>
+    </div>
+
+    <script>
+        // 阶乘计算
+        function factorial(n) {
+            if (n === 0 || n === 1) {
+                return 1;
+            }
+            return n * factorial(n - 1);
+        }
+
+        function calculateFactorial() {
+            const n = parseInt(document.getElementById('factorialInput').value);
+            const result = factorial(n);
+            document.getElementById('factorialResult').textContent = `${n}! = ${result}`;
+        }
+
+        // 斐波那契数列
+        function fibonacci(n) {
+            if (n <= 1) {
+                return n;
+            }
+            return fibonacci(n - 1) + fibonacci(n - 2);
+        }
+
+        function generateFibonacci() {
+            const n = parseInt(document.getElementById('fibonacciInput').value);
+            const sequence = [];
+            for (let i = 0; i < n; i++) {
+                sequence.push(fibonacci(i));
+            }
+            document.getElementById('fibonacciResult').textContent = sequence.join(', ');
+        }
+
+        // 树形结构遍历
+        const tree = {
+            value: 'A',
+            children: [
+                {
+                    value: 'B',
+                    children: [
+                        { value: 'D' },
+                        { value: 'E' }
+                    ]
+                },
+                {
+                    value: 'C',
+                    children: [
+                        { value: 'F' },
+                        { value: 'G' }
+                    ]
+                }
+            ]
+        };
+
+        function traverseTreeRecursive(node, prefix = '') {
+            let result = prefix + node.value + '\n';
+            if (node.children) {
+                node.children.forEach((child, index) => {
+                    const isLast = index === node.children.length - 1;
+                    result += traverseTreeRecursive(child, prefix + (isLast ? '└── ' : '├── '));
+                });
+            }
+            return result;
+        }
+
+        function traverseTree() {
+            const result = traverseTreeRecursive(tree);
+            document.getElementById('treeDemo').innerHTML = '<pre>' + result + '</pre>';
+        }
+    </script>
+</body>
+</html>

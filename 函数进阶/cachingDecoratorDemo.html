@@ -1,0 +1,108 @@
+<!-- FILEPATH: /Users/fkycoya/Documents/Code/Javascript/函数进阶/cachingDecoratorDemo.html -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>缓存装饰器 Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>缓存装饰器 Demo</h1>
+        <button onclick="runDemo()">运行 Demo</button>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        function log(message) {
+            document.getElementById('output').textContent += message + '\n';
+        }
+
+        // 模拟一个耗时的计算函数
+        function slow(x) {
+            // 人为延迟，模拟复杂计算
+            let now = Date.now();
+            while (Date.now() - now < 1000) {} // 等待 1 秒
+            return x * 2;
+        }
+
+        // 缓存装饰器
+        function cachingDecorator(func) {
+            let cache = new Map();
+
+            return function(x) {
+                if (cache.has(x)) {
+                    log(`从缓存中读取结果：${x}`);
+                    return cache.get(x);
+                }
+
+                let result = func(x);
+
+                cache.set(x, result);
+                log(`计算结果并缓存：${x}`);
+                return result;
+            };
+        }
+
+        // 应用缓存装饰器
+        let cachedSlow = cachingDecorator(slow);
+
+        function runDemo() {
+            document.getElementById('output').textContent = '';
+            log('Demo 开始\n');
+
+            log('第一次调用 cachedSlow(2):');
+            let start = Date.now();
+            log(`结果: ${cachedSlow(2)}`);
+            log(`耗时: ${Date.now() - start} ms\n`);
+
+            log('第二次调用 cachedSlow(2):');
+            start = Date.now();
+            log(`结果: ${cachedSlow(2)}`);
+            log(`耗时: ${Date.now() - start} ms\n`);
+
+            log('调用 cachedSlow(3):');
+            start = Date.now();
+            log(`结果: ${cachedSlow(3)}`);
+            log(`耗时: ${Date.now() - start} ms\n`);
+
+            log('再次调用 cachedSlow(3):');
+            start = Date.now();
+            log(`结果: ${cachedSlow(3)}`);
+            log(`耗时: ${Date.now() - start} ms`);
+        }
+    </script>
+</body>
+</html>

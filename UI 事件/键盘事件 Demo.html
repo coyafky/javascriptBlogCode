@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>键盘事件 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">键盘事件 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <input id="inputField" type="text" class="w-full p-2 border rounded" placeholder="在这里输入文字...">
+            <p class="mt-2 text-sm text-gray-600">尝试按下不同的键，包括特殊键和组合键</p>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <h2 class="text-lg font-semibold mb-2">最近的键盘事件</h2>
+            <div id="eventLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm">
+                <p>键盘事件将显示在这里</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h2 class="text-lg font-semibold mb-2">按键状态</h2>
+            <div id="keyStatus" class="grid grid-cols-2 gap-2">
+                <div id="arrowUp" class="p-2 bg-gray-200 rounded text-center">↑</div>
+                <div id="arrowDown" class="p-2 bg-gray-200 rounded text-center">↓</div>
+                <div id="arrowLeft" class="p-2 bg-gray-200 rounded text-center">←</div>
+                <div id="arrowRight" class="p-2 bg-gray-200 rounded text-center">→</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('inputField');
+        const eventLog = document.getElementById('eventLog');
+        const keyStatus = document.getElementById('keyStatus');
+
+        function logEvent(event) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${event.type}: key=${event.key}, code=${event.code}`;
+            if (event.ctrlKey) logEntry.textContent += ' (Ctrl)';
+            if (event.altKey) logEntry.textContent += ' (Alt)';
+            if (event.shiftKey) logEntry.textContent += ' (Shift)';
+            eventLog.insertBefore(logEntry, eventLog.firstChild);
+            
+            if (eventLog.children.length > 10) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+
+        function updateKeyStatus(event, isKeyDown) {
+            const key = event.key.toLowerCase();
+            const element = document.getElementById(`arrow${key.charAt(0).toUpperCase() + key.slice(1)}`);
+            if (element) {
+                element.style.backgroundColor = isKeyDown ? '#4CAF50' : '#e5e7eb';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            logEvent(event);
+            updateKeyStatus(event, true);
+
+            // 阻止方向键的默认行为（例如，滚动页面）
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('keyup', function(event) {
+            logEvent(event);
+            updateKeyStatus(event, false);
+        });
+
+        // 聚焦输入框
+        inputField.focus();
+    </script>
+</body>
+</html>

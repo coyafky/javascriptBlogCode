@@ -1,0 +1,99 @@
+<!-- FILEPATH: /Users/fkycoya/Documents/Code/Javascript/函数进阶/printNumbersDemo.html -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>printNumbers Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>printNumbers Demo</h1>
+        <h2>使用 setInterval</h2>
+        <button onclick="runSetIntervalDemo()">运行 setInterval Demo</button>
+        <pre id="setIntervalOutput"></pre>
+    </div>
+
+    <div class="container">
+        <h2>使用嵌套的 setTimeout</h2>
+        <button onclick="runSetTimeoutDemo()">运行嵌套 setTimeout Demo</button>
+        <pre id="setTimeoutOutput"></pre>
+    </div>
+
+    <script>
+        function log(id, message) {
+            document.getElementById(id).textContent += message + '\n';
+        }
+
+        // 使用 setInterval 实现
+        function printNumbersInterval(from, to) {
+            let current = from;
+
+            let timerId = setInterval(function() {
+                log('setIntervalOutput', current);
+                if (current == to) {
+                    clearInterval(timerId);
+                }
+                current++;
+            }, 1000);
+        }
+
+        // 使用嵌套的 setTimeout 实现
+        function printNumbersTimeout(from, to) {
+            let current = from;
+
+            setTimeout(function go() {
+                log('setTimeoutOutput', current);
+                if (current < to) {
+                    setTimeout(go, 1000);
+                }
+                current++;
+            }, 1000);
+        }
+
+        function runSetIntervalDemo() {
+            document.getElementById('setIntervalOutput').textContent = '';
+            log('setIntervalOutput', '开始 setInterval demo:');
+            printNumbersInterval(1, 5);
+        }
+
+        function runSetTimeoutDemo() {
+            document.getElementById('setTimeoutOutput').textContent = '';
+            log('setTimeoutOutput', '开始嵌套 setTimeout demo:');
+            printNumbersTimeout(1, 5);
+        }
+    </script>
+</body>
+</html>

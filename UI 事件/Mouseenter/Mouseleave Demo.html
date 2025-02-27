@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouseenter/Mouseleave Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">Mouseenter/Mouseleave Demo</h1>
+        
+        <div class="flex space-x-4">
+            <div class="w-1/2">
+                <h2 class="text-xl font-semibold mb-2">Mouseenter/Mouseleave</h2>
+                <div id="enterLeaveParent" class="w-64 h-64 bg-blue-200 flex items-center justify-center relative">
+                    父元素 (enter/leave)
+                    <div id="enterLeaveChild" class="w-32 h-32 bg-red-200 flex items-center justify-center absolute">
+                        子元素 (enter/leave)
+                    </div>
+                </div>
+                <div id="enterLeaveLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm mt-4">
+                    <p>移动鼠标到元素上来查看 enter/leave 事件</p>
+                </div>
+            </div>
+            
+            <div class="w-1/2">
+                <h2 class="text-xl font-semibold mb-2">Mouseover/Mouseout</h2>
+                <div id="overOutParent" class="w-64 h-64 bg-green-200 flex items-center justify-center relative">
+                    父元素 (over/out)
+                    <div id="overOutChild" class="w-32 h-32 bg-yellow-200 flex items-center justify-center absolute">
+                        子元素 (over/out)
+                    </div>
+                </div>
+                <div id="overOutLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm mt-4">
+                    <p>移动鼠标到元素上来查看 over/out 事件</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setupEventListeners(parentId, childId, logId, eventTypes) {
+            const parent = document.getElementById(parentId);
+            const child = document.getElementById(childId);
+            const log = document.getElementById(logId);
+
+            function logEvent(event) {
+                const logEntry = document.createElement('p');
+                logEntry.textContent = `${event.type} on ${event.target.id}`;
+                logEntry.className = event.type.includes('enter') || event.type.includes('over') ? 'text-blue-600' : 'text-red-600';
+                
+                log.insertBefore(logEntry, log.firstChild);
+                
+                if (log.children.length > 10) {
+                    log.removeChild(log.lastChild);
+                }
+            }
+
+            [parent, child].forEach(element => {
+                eventTypes.forEach(eventType => {
+                    element.addEventListener(eventType, logEvent);
+                });
+            });
+        }
+
+        setupEventListeners('enterLeaveParent', 'enterLeaveChild', 'enterLeaveLog', ['mouseenter', 'mouseleave']);
+        setupEventListeners('overOutParent', 'overOutChild', 'overOutLog', ['mouseover', 'mouseout']);
+    </script>
+</body>
+</html>

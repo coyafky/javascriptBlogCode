@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防止选择和复制 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">防止选择和复制 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <h2 class="text-xl font-semibold mb-2">1. 防止双击选择</h2>
+            <p class="mb-2">尝试双击下面的文本：</p>
+            <div class="bg-blue-100 p-2 rounded" onmousedown="return false" ondblclick="alert('双击了！但没有选中文本')">
+                这是一段可以双击但不会被选中的文本。
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <h2 class="text-xl font-semibold mb-2">2. 使用 CSS 防止选择</h2>
+            <p class="mb-2">尝试选择下面的文本：</p>
+            <div class="bg-green-100 p-2 rounded no-select">
+                这是一段使用 CSS 禁止选择的文本。
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-2">3. 防止复制</h2>
+            <p class="mb-2">尝试复制下面的文本：</p>
+            <div id="noCopy" class="bg-yellow-100 p-2 rounded">
+                这是一段禁止复制的文本。你可以选择它，但无法复制。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('noCopy').addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('禁止复制！');
+        });
+    </script>
+</body>
+</html>

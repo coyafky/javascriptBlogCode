@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滚动事件 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background-color: #4CAF50;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4">滚动事件 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4 sticky top-0">
+            <p id="scrollInfo" class="font-semibold">当前滚动位置：0px</p>
+        </div>
+
+        <div id="content">
+            <!-- 这里将动态添加内容 -->
+        </div>
+
+        <div id="loadingIndicator" class="text-center py-4 hidden">
+            <p class="text-lg font-semibold">加载更多内容...</p>
+        </div>
+    </div>
+
+    <div id="backToTop" class="fixed bottom-4 right-4 bg-blue-500 text-white p-2 rounded-full cursor-pointer hidden">
+        ↑
+    </div>
+
+    <script>
+        const scrollInfo = document.getElementById('scrollInfo');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        const content = document.getElementById('content');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const backToTop = document.getElementById('backToTop');
+
+        let itemCount = 0;
+
+        function addContent(count = 10) {
+            for (let i = 0; i < count; i++) {
+                const item = document.createElement('div');
+                item.className = 'bg-white p-4 rounded-lg shadow-md mb-4';
+                item.textContent = `内容项 ${++itemCount}`;
+                content.appendChild(item);
+            }
+        }
+
+        function updateScrollInfo() {
+            const scrollPosition = window.pageYOffset;
+            scrollInfo.textContent = `当前滚动位置：${scrollPosition}px`;
+
+            const scrollPercentage = (scrollPosition / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            scrollIndicator.style.width = `${scrollPercentage}%`;
+
+            if (scrollPosition > 300) {
+                backToTop.classList.remove('hidden');
+            } else {
+                backToTop.classList.add('hidden');
+            }
+        }
+
+        function checkBottomReached() {
+            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 100) {
+                loadingIndicator.classList.remove('hidden');
+                setTimeout(() => {
+                    addContent(5);
+                    loadingIndicator.classList.add('hidden');
+                }, 1000);
+            }
+        }
+
+        window.addEventListener('scroll', function() {
+            updateScrollInfo();
+            checkBottomReached();
+        });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 初始添加一些内容
+        addContent(20);
+    </script>
+</body>
+</html>

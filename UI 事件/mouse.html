@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标事件 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-2xl font-bold mb-4">鼠标事件 Demo</h1>
+        <div id="eventBox" class="bg-blue-100 p-4 rounded mb-4 h-40 overflow-y-auto">
+            <p>在这里移动鼠标来查看事件</p>
+        </div>
+        <button id="clearBtn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">清除日志</button>
+    </div>
+
+    <script>
+        const eventBox = document.getElementById('eventBox');
+        const clearBtn = document.getElementById('clearBtn');
+
+        function logEvent(eventName) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${eventName} 事件触发`;
+            logEntry.className = 'text-sm text-gray-600';
+            eventBox.appendChild(logEntry);
+            eventBox.scrollTop = eventBox.scrollHeight;
+        }
+
+        eventBox.addEventListener('mousedown', () => logEvent('mousedown'));
+        eventBox.addEventListener('mouseup', () => logEvent('mouseup'));
+        eventBox.addEventListener('mouseover', () => logEvent('mouseover'));
+        eventBox.addEventListener('mouseout', () => logEvent('mouseout'));
+        eventBox.addEventListener('mousemove', () => logEvent('mousemove'));
+        eventBox.addEventListener('click', () => logEvent('click'));
+        eventBox.addEventListener('dblclick', () => logEvent('dblclick'));
+        eventBox.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            logEvent('contextmenu');
+        });
+
+        clearBtn.addEventListener('click', () => {
+            eventBox.innerHTML = '<p>在这里移动鼠标来查看事件</p>';
+        });
+    </script>
+</body>
+</html>

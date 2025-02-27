@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouseover/Mouseout Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">Mouseover/Mouseout Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <div class="flex justify-around mb-4">
+                <div id="element1" class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                <div id="element2" class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                <div id="element3" class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">3</div>
+            </div>
+            <div id="eventLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm">
+                <p>将鼠标移动到上方的元素上来查看事件信息</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const elements = document.querySelectorAll('#element1, #element2, #element3');
+        const eventLog = document.getElementById('eventLog');
+
+        function logEvent(event) {
+            const targetId = event.target.id || 'unknown';
+            const relatedTargetId = event.relatedTarget ? (event.relatedTarget.id || 'body') : 'outside';
+            
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${event.type}: from ${relatedTargetId} to ${targetId}`;
+            logEntry.className = event.type === 'mouseover' ? 'text-blue-600' : 'text-red-600';
+            
+            eventLog.insertBefore(logEntry, eventLog.firstChild);
+            
+            if (eventLog.children.length > 10) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+
+        elements.forEach(element => {
+            element.addEventListener('mouseover', logEvent);
+            element.addEventListener('mouseout', logEvent);
+        });
+    </script>
+</body>
+</html>

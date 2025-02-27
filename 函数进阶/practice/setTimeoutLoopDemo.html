@@ -1,0 +1,77 @@
+<!-- FILEPATH: /Users/fkycoya/Documents/Code/Javascript/函数进阶/setTimeoutLoopDemo.html -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>setTimeout 和长时间循环 Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>setTimeout 和长时间循环 Demo</h1>
+        <button onclick="runDemo()">运行 Demo</button>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        function log(message) {
+            document.getElementById('output').textContent += message + '\n';
+        }
+
+        function runDemo() {
+            document.getElementById('output').textContent = '';
+            log('Demo 开始');
+
+            let i = 0;
+            let startTime = Date.now();
+
+            setTimeout(() => {
+                let endTime = Date.now();
+                log(`setTimeout 回调执行`);
+                log(`i 的值: ${i}`);
+                log(`从开始到 setTimeout 回调执行的时间: ${endTime - startTime}ms`);
+            }, 100);
+
+            log('开始执行长时间循环');
+            for(let j = 0; j < 1000000000; j++) {
+                i++;
+            }
+            let loopEndTime = Date.now();
+            log(`循环执行完毕`);
+            log(`循环执行时间: ${loopEndTime - startTime}ms`);
+        }
+    </script>
+</body>
+</html>

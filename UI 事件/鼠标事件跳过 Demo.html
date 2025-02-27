@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标事件跳过 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">鼠标事件跳过 Demo</h1>
+        
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <div id="parent" class="w-64 h-64 bg-blue-200 flex items-center justify-center relative">
+                父元素
+                <div id="child" class="w-32 h-32 bg-red-200 flex items-center justify-center absolute">
+                    子元素
+                </div>
+            </div>
+            <div id="eventLog" class="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm mt-4">
+                <p>快速移动鼠标到元素上或穿过元素来查看事件</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const parent = document.getElementById('parent');
+        const child = document.getElementById('child');
+        const eventLog = document.getElementById('eventLog');
+
+        function logEvent(event) {
+            const targetId = event.target.id;
+            const relatedTargetId = event.relatedTarget ? event.relatedTarget.id : 'outside';
+            
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${event.type} on ${targetId} (from ${relatedTargetId})`;
+            logEntry.className = event.type === 'mouseover' ? 'text-blue-600' : 'text-red-600';
+            
+            eventLog.insertBefore(logEntry, eventLog.firstChild);
+            
+            if (eventLog.children.length > 10) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+
+        [parent, child].forEach(element => {
+            element.addEventListener('mouseover', logEvent);
+            element.addEventListener('mouseout', logEvent);
+        });
+    </script>
+</body>
+</html>

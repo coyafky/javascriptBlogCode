@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标坐标 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold mb-4">鼠标坐标 Demo</h1>
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+            <p id="coordsDisplay" class="text-lg font-semibold mb-2">移动鼠标来查看坐标</p>
+            <p id="clientCoords" class="mb-1"></p>
+            <p id="pageCoords" class="mb-1"></p>
+        </div>
+        <div id="scrollArea" class="bg-blue-100 p-4 rounded-lg h-96 overflow-y-scroll relative">
+            <div class="h-[1000px] flex items-center justify-center">
+                <p class="text-center">这是一个可滚动的区域<br>尝试滚动并移动鼠标</p>
+            </div>
+            <div id="mouseTracker" class="absolute w-6 h-6 bg-red-500 rounded-full opacity-50 pointer-events-none" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const coordsDisplay = document.getElementById('coordsDisplay');
+        const clientCoords = document.getElementById('clientCoords');
+        const pageCoords = document.getElementById('pageCoords');
+        const scrollArea = document.getElementById('scrollArea');
+        const mouseTracker = document.getElementById('mouseTracker');
+
+        function updateCoords(event) {
+            clientCoords.textContent = `Client: X: ${event.clientX}, Y: ${event.clientY}`;
+            pageCoords.textContent = `Page: X: ${event.pageX}, Y: ${event.pageY}`;
+
+            // 更新鼠标跟踪器位置
+            mouseTracker.style.display = 'block';
+            mouseTracker.style.left = `${event.pageX - scrollArea.offsetLeft}px`;
+            mouseTracker.style.top = `${event.pageY - scrollArea.offsetTop}px`;
+        }
+
+        scrollArea.addEventListener('mousemove', updateCoords);
+        scrollArea.addEventListener('mouseleave', () => {
+            coordsDisplay.textContent = '移动鼠标来查看坐标';
+            clientCoords.textContent = '';
+            pageCoords.textContent = '';
+            mouseTracker.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
